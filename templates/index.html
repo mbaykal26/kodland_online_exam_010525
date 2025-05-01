@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Ana Sayfa - Online Sınav{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <!-- Welcome Banner using Bootstrap's Alert Component -->
+  <div class="alert alert-info text-center" role="alert">
+    <h4 class="alert-heading">Hoşgeldiniz!</h4>
+    <p>
+      Bu platform; IT mülakat soruları, teknik blog yazıları ve ileri düzey Elektrik-Elektronik ile Bilgisayar Bilimleri uygulamalarını kapsamaktadır.
+      En güncel <strong>teknik sorular</strong> ve <strong>blog içerikleri</strong>'ni buradan takip edebilir, kendinizi geliştirebilirsiniz.
+    </p>
+    <hr>
+    <p class="mb-0">
+      İlgilendiğiniz alanlarda derinlemesine bilgi almak ve mülakatlara hazırlanmak için buradayız!
+    </p>
+  </div>
+  
+  <!-- Flash messages or additional content can go here -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flashes">
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  
+  <h2 class="text-center">Ana Sayfa</h2>
+  <!-- Add any additional index page content here -->
+</div>
+{% endblock %}

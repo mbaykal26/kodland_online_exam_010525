@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Onay Bekleyen Gönderiler</h2>
+
+<!-- Loop over each pending post -->
+{% for post in posts %}
+  <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+    <!-- Title -->
+    <h3>{{ post.title }}</h3>
+
+    <!-- Basic metadata: author name and date -->
+    <p>
+      <strong>Yazar:</strong> {{ post.posted_by }} &nbsp;|&nbsp;
+      <strong>Yayın Tarihi:</strong> {{ post.created_at }}
+    </p>
+
+    <!-- Display the content so moderator can read everything -->
+    <div style="margin-bottom: 10px;">
+      {{ post.content|safe }}
+    </div>
+
+    <!-- If there is an attached file, display or link it -->
+    {% if post.filename %}
+      {% set ext = post.filename.rsplit('.', 1)[1].lower() %}
+      {% if post.filetype == 'pdf' %}
+        <iframe src="{{ url_for('static', filename='uploads/' ~ post.filename) }}"
+                width="100%"
+                height="300">
+        </iframe>
+      {% elif post.filetype == 'document' %}
+        <!-- For docx/docs, show a link to view_file route, for example -->
+        <p style="text-align: center;">
+          <a class="download-link"
+             href="{{ url_for('view_file', filename=post.filename) }}"
+             target="_blank">
+             Dosyayı İndirmek için Tıklayın
+          </a>
+        </p>
+      {% elif post.filetype == 'image' %}
+        <img src="{{ url_for('static', filename='uploads/' ~ post.filename) }}"
+             alt="Blog image"
+             style="max-width:100%;">
+      {% else %}
+        <!-- Fallback: link to the raw file -->
+        <p>
+          <a href="{{ url_for('static', filename='uploads/' ~ post.filename) }}" target="_blank">
+            Dosyayı Görüntüle
+          </a>
+        </p>
+      {% endif %}
+    {% endif %}
+
+    <!-- "Onayla" button that sends a POST request to /blog/approve/<post.id> -->
+    <form action="{{ url_for('approve_post', post_id=post.id) }}" method="POST" style="margin-top:10px;">
+      <button type="submit">Onayla</button>
+    </form>
+  </div>
+{% endfor %}
+{% endblock %}

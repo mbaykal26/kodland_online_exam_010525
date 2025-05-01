@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Temperature Data{% endblock %}
+{% block content %}
+  <h2>Current Temperature</h2>
+  {% if temperature is not none %}
+    <p>The current temperature is: <strong>{{ temperature }} °C</strong></p>
+  {% else %}
+    <p>No temperature data available at this time.</p>
+  {% endif %}
+{% endblock %}

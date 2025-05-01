@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Puan Tablosu – Online Sınav{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Puan Tablosu (Sizin Denemeleriniz)</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Konu</th>
+        <th>Puan</th>
+        <th>Tarih</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ row.konu }}</td>
+        <td>{{ row.dogru_sayisi }}</td>
+        <td>{{ row.tarih }}</td>
+      </tr>
+      {% endfor %}
+      {% if rows|length == 0 %}
+      <tr><td colspan="4" class="text-center">Henüz deneme yapmadınız.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

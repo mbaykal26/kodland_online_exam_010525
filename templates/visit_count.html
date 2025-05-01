@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Temperature Data{% endblock %}
+{% block content %}
+
+{% block content %}
+<h3>Toplam Ziyaretçi: {{ total }}</h3>
+
+<h4>Günlük Dağılım</h4>
+<table class="table">
+<thead><tr><th>Tarih</th><th>Sayı</th></tr></thead>
+<tbody>
+  {% for row in daily %}
+    <tr><td>{{ row.tarih }}</td><td>{{ row.sayi }}</td></tr>
+  {% endfor %}
+</tbody>
+</table>
+
+<h4>Ülkeye Göre Dağılım</h4>
+<table class="table">
+<thead><tr><th>Ülke</th><th>Ziyaretçi Sayısı</th></tr></thead>
+<tbody>
+  {% for row in country %}
+    <tr><td>{{ row.ulke }}</td><td>{{ row.sayi }}</td></tr>
+  {% endfor %}
+</tbody>
+</table>
+  
+{% endblock %}  
+
+<!--  -->

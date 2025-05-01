@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} - Blog Yazısını Düzenle - Online Sınav{% endblock %}
+
+{% block content %}
+<div class="blog-container" style="width:50%; margin:0 auto; border:1px solid #ccc; padding:20px; box-shadow:2px 2px 5px rgba(0,0,0,0.1);">
+  <h2 style="text-align:center;">Blog Yazısını Düzenle</h2>
+  <form method="post" enctype="multipart/form-data">
+    <div>
+      <label for="title">Başlık:</label>
+      <input type="text" name="title" id="title" value="{{ post.title }}" required>
+    </div>
+    <div>
+      <label for="content">İçerik:</label>
+      <textarea name="content" id="editor" required>{{ post.content }}</textarea>
+    </div>
+    <div>
+      <label for="file">Dosya Yükle (Opsiyonel):</label>
+      <input type="file" name="file" id="file">
+    </div>
+    <div>
+      <button type="submit">Güncelle</button>
+    </div>
+  </form>
+  <div style="margin-top:10px; text-align:center;">
+    <small>{{ post.created_at }}</small>
+  </div>
+</div>
+
+<!-- Comments Section -->
+<div style="width:50%; margin:20px auto;">
+  <h3>Yorumlar</h3>
+  {% for c in get_comments(post.id) %}
+    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+      <p>{{ c.comment }}</p>
+      <small>Yazan: {{ c.author_name or "Anonymous" }} - {{ c.created_at }}</small>
+      {% if session.get('user_id') and ((user_role_id == 1) or (session.get('user_id')|int == post.author_id)) %}
+        <a href="{{ url_for('update_blog_yazisi', post_id=post.id) }}" style="margin-right:15px;">Düzenle</a>
+        <a href="{{ url_for('delete_blog_post', post_id=post.id) }}" style="color:red;">Sil</a>
+      {% endif %}
+
+    </div>
+  {% else %}
+    <p>Henüz yorum yapılmamış.</p>
+  {% endfor %}
+  
+  {% if session.get('user_id') %}
+    <div style="margin-top:20px;">
+      <h3>Yorum Ekle</h3>
+      <form method="post" action="{{ url_for('add_comment', post_id=post.id) }}">
+        <textarea name="comment" rows="4" style="width:100%;" placeholder="Yorumunuzu buraya yazın..." required></textarea>
+        <div style="margin-top:10px;">
+          <button type="submit" style="padding:8px 16px; background-color:#2E8B57; color:white; border:none; border-radius:4px;">Yorumu Gönder</button>
+        </div>
+      </form>
+    </div>
+  {% else %}
+    <p><a href="{{ url_for('login') }}">Giriş yaparak</a> yorum yapabilirsiniz.</p>
+  {% endif %}
+</div>
+
+<!-- Include CKEditor -->
+<script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+<script>
+  CKEDITOR.replace('editor');
+</script>
+{% endblock %}

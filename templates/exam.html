@@ -1,0 +1,52 @@
+{# templates/exam.html #}
+{% extends "base.html" %}
+{% block title %}{{ subject }} Sınavı{% endblock %}
+
+{% block content %}
+<div class="exam-container bg-light p-4 rounded shadow-sm" style="max-width: 800px; margin: auto;">
+  <h2 class="text-center mb-4">{{ subject }} Sınavı</h2>
+  <form method="POST" action="{{ url_for('exam', subject=subject) }}">
+    {% for soru in sorular %}
+      {# if we're in review mode AND this question was wrong, give it a red background #}
+      <div class="soru mb-4 border-bottom pb-3
+                 {% if review and not results[soru.id].is_correct %}bg-danger bg-opacity-25{% endif %}">
+        <p class="font-weight-bold">Soru {{ loop.index }}: {{ soru.soru_metni }}</p>
+        {% set options = [soru.secenek1, soru.secenek2, soru.secenek3, soru.secenek4] %}
+        {% for secenek in options %}
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="cevap_{{ soru.id }}"
+              id="option_{{ soru.id }}_{{ loop.index }}"
+              value="{{ secenek|trim }}"
+              {# if review, pre‑check the student’s previous answer #}
+              {% if review and results[soru.id].given == secenek|trim %}checked{% endif %}
+            >
+            <label class="form-check-label" for="option_{{ soru.id }}_{{ loop.index }}">
+              {{ secenek|trim }}
+            </label>
+          </div>
+        {% endfor %}
+        {% if review and results[soru.id].is_correct %}
+          {# show the correct answer underneath #}
+          <small class="text-success">Tebirkler! Doğru Cevap: <strong>{{ results[soru.id].correct }}</strong></small>
+        {% endif %} 
+      </div>
+    {% endfor %}
+
+    <div class="text-center mt-4">
+      {# “Göster” button to review answers #}
+      <button type="submit" name="action" value="review"
+              class="btn btn-outline-secondary me-2">
+        Sonucu Göster, Kırmızı alan yanlış ya da boşları gösterir
+      </button>
+      {# “Bitir” button to finalize and go to result #}
+      <button type="submit" name="action" value="finish"
+              class="btn btn-primary">
+        Sınavı Bitir
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

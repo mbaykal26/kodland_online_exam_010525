@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Kayıt Ol - Online Sınav{% endblock %}
+{% block content %}
+<h2>Kayıt Ol</h2>
+
+<!-- Inline styling or move to a separate CSS file -->
+<style>
+  .form-group {
+    margin-bottom: 10px;
+  }
+  .form-label {
+    display: inline-block;
+    width: 100px;       /* Adjust label width as needed */
+    text-align: right;  /* Right-align label text */
+    margin-right: 10px;
+  }
+  .form-input {
+    width: 200px;       /* Adjust input width as needed */
+    padding: 5px;
+  }
+</style>
+
+<form method="POST" action="{{ url_for('register') }}">
+  <div class="form-group">
+    <label for="name" class="form-label">Adınız:</label>
+    <input type="text" name="name" id="name" class="form-input" required>
+  </div>
+  <div class="form-group">
+    <label for="email" class="form-label">E-posta:</label>
+    <input type="email" name="email" id="email" class="form-input" required>
+  </div>
+  <div class="form-group">
+    <label for="sifre" class="form-label">Şifre:</label>
+    <input type="password" name="sifre" id="sifre" class="form-input" required>
+  </div>
+  <div class="form-group">
+    <button type="submit">Kayıt Ol</button>
+  </div>
+</form>
+{% endblock %}

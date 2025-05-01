@@ -1,0 +1,71 @@
+<!-- templates/blog.html -->
+{% extends "base.html" %}
+{% block title %}Blog - Online Sınav{% endblock %}
+
+{% block content %}
+<div class="blog-frame">
+  <div class="container my-4">
+    <h2 class="text-center mb-4">Blog Yazıları</h2>
+
+    <!-- Filtering Form -->
+    <div class="text-center mb-4">
+      <form method="get" action="{{ url_for('blog') }}" class="form-inline justify-content-center">
+        <input type="text" name="q" class="form-control mr-2" placeholder="Arama yapın..." value="{{ q|default('') }}">
+        <button type="submit" class="btn btn-primary">Filtrele</button>
+      </form>
+    </div>
+
+    <!-- Blog Posts List -->
+    <div class="blog-container mx-auto" style="max-width: 80%;">
+      {% if session.get('user_id') %}
+        <div class="text-right mb-3">
+          <a href="{{ url_for('new_blog_post') }}" class="btn btn-outline-primary">Yeni Blog Yazısı Ekle</a>
+        </div>
+      {% endif %}
+
+      {% for post in posts %}
+        <div class="blog-post mb-4 pb-3 border-bottom">
+          <h3>{{ post.title }}</h3>
+          <div class="blog-post-content">
+            {{ post.content | safe | truncate(800, True, '...') }}
+          </div>
+          <div class="mt-2">
+            <a href="{{ url_for('blog_post_detail', post_id=post.id) }}" class="btn btn-link text-primary">Devamını Oku</a>
+          </div>
+          {% if post.filename %}
+            {% set ext = post.filename.rsplit('.', 1)[1].lower() %}
+            {% if post.filetype == 'pdf' %}
+              <iframe src="{{ url_for('static', filename='uploads/' ~ post.filename) }}" width="100%" height="300"></iframe>
+            {% elif post.filetype == 'document' %}
+              <p class="text-center">
+                <a class="download-link" href="{{ url_for('view_file', filename=post.filename) }}" target="_blank">
+                  Dosyayı İndirmek için Tıklayın
+                </a>
+              </p>
+            {% elif post.filetype == 'image' %}
+              <img src="{{ url_for('static', filename='uploads/' ~ post.filename) }}" alt="Blog image" class="img-fluid">
+            {% else %}
+              <a href="{{ url_for('static', filename='uploads/' ~ post.filename) }}" target="_blank">Dosyayı Görüntüle</a>
+            {% endif %}
+          {% endif %}
+          <div class="mt-2">
+            <small>
+              {{ post.created_at }}
+              {% if post.author_name %}&nbsp;–&nbsp;<strong>{{ post.author_name }}</strong>{% endif %}
+            </small>
+            <br>
+            {% if session.get('user_id') and ((user_role_id == 1) or (session.get('user_id')|int == post.author_id)) %}
+              <a href="{{ url_for('update_blog_yazisi', post_id=post.id) }}" class="btn btn-sm btn-warning">Düzenle</a>
+              <a href="{{ url_for('delete_blog_post', post_id=post.id) }}" class="btn btn-sm btn-danger">Sil</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="{{ url_for('login') }}" class="btn btn-lg btn-primary">Giriş Sayfasına Dön</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

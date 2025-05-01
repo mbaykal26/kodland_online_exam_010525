@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Yorum Düzenle - Online Sınav{% endblock %}
+{% block content %}
+<h2 style="text-align: center;">Yorum Düzenle</h2>
+
+<!-- Comment Edit Form -->
+<form method="post" style="width: 60%; margin: 20px auto;">
+  <div style="margin-bottom: 15px;">
+    <label for="comment" style="font-weight: bold;">Yorumunuz:</label><br>
+    <textarea id="comment" name="comment" rows="5" style="width: 100%; padding: 8px;" required>{{ comment.content }}</textarea>
+  </div>
+  <div style="text-align: center;">
+    <button type="submit" style="font-size: 1em; padding: 10px 20px; background-color: #2E8B57; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      Yorumu Güncelle
+    </button>
+  </div>
+</form>
+{% endblock %}

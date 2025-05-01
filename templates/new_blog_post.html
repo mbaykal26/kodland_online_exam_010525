@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Yeni Blog Yazısı - Online Sınav{% endblock %}
+{% block content %}
+<h2>Yeni Blog Yazısı Ekle</h2>
+<form method="post" enctype="multipart/form-data">
+  <div>
+    <label for="title">Başlık:</label>
+    <input type="text" name="title" id="title" required>
+  </div>
+  <div>
+    <label for="content">İçerik:</label>
+    <!-- Textarea to be enhanced by CKEditor -->
+    <textarea name="content" id="editor" required></textarea>
+  </div>
+  <div>
+    <label for="file">Dosya Yükle (Opsiyonel):</label>
+    <input type="file" name="file" id="file">
+  </div>
+  <div>
+    <button type="submit">Blog Yazısını Oluştur</button>
+  </div>
+</form>
+<!-- Include CKEditor from CDN and initialize it -->
+<script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('editor');
+</script>
+{% endblock %}

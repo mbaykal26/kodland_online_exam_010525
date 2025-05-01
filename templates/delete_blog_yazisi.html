@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Blog Yazısı Sil{% endblock %}
+{% block content %}
+<h2>Blog Yazısını Sil</h2>
+<p>Bu blog yazısını silmek istediğinizden emin misiniz?</p>
+<div style="border: 1px solid #ccc; padding: 15px; margin: 20px 0;">
+  <h3>{{ post.title }}</h3>
+  <p>{{ post.content }}</p>
+  {% if post.filename %}
+    {% if post.filetype == 'pdf' %}
+      <iframe src="{{ url_for('static', filename='uploads/' ~ post.filename) }}" width="600" height="400"></iframe>
+    {% elif post.filetype == 'document' %}
+      <iframe src="{{ url_for('static', filename='uploads/' ~ post.filename) }}" width="600" height="400"></iframe>
+    {% elif post.filetype == 'image' %}
+      <img src="{{ url_for('static', filename='uploads/' ~ post.filename) }}" alt="Blog image" style="max-width:300px;">
+    {% else %}
+      <a href="{{ url_for('static', filename='uploads/' ~ post.filename) }}" target="_blank">Dosyayı Görüntüle</a>
+    {% endif %}
+  {% endif %}
+</div>
+<form method="POST">
+  <button type="submit" style="background-color: red; color: white; padding: 10px 20px;">Evet, Sil</button>
+  <a href="{{ url_for('blog') }}" style="padding: 10px 20px; text-decoration: none;">İptal</a>
+</form>
+{% endblock %}

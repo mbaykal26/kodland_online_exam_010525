@@ -1,0 +1,266 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Online Sınav{% endblock %}</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* ========== BODY & TYPO ========== */
+    body {
+      font-family: "Open Sans", Arial, sans-serif;
+      background-color: #f9fff9;
+      color: #333;
+      margin: 0;
+      padding: 0 0 50px; /* space for unsubscribe btn */
+    }
+
+    /* ========== NAVBAR FONT SIZES (+25%) ========== */
+    .navbar-brand,
+    .navbar-nav .nav-link,
+    .navbar-text,
+    .btn-scoreboard {
+      font-size: 1.25rem;
+    }
+
+    /* ========== FORCE UNDERLINE ON NAV LINKS & BUTTON-LINKS ========== */
+    .navbar-brand,
+    .navbar-nav .nav-link,
+    .btn-scoreboard {
+      text-decoration: underline !important;
+    }
+    .navbar-brand:hover,
+    .navbar-nav .nav-link:hover,
+    .btn-scoreboard:hover {
+      text-decoration: underline !important;
+    }
+
+    /* ========== PUAN TABLOSU BUTTON ========== */
+    .btn-scoreboard {
+      color: #28a745 !important;  /* match .text-success */
+      background: none;
+      border: none;
+      padding: 0;
+      margin-top: .2rem;
+    }
+    .btn-scoreboard:hover {
+      color: #218838 !important;
+    }
+
+    /* ========== UNSUBSCRIBE / MEMBERS BUTTONS ========== */
+    .unsubscribe-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 20px;
+      z-index: 1000;
+    }
+    .unsubscribe-btn .btn {
+      font-size: .8rem;
+      padding: .25rem .5rem;
+    }
+
+    /* ========== FLASH MESSAGES ========== */
+    .flash-messages ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .flash-messages li {
+      margin-bottom: .5rem;
+    }
+
+    /* ========== BLOG POST CONTENT ========== */
+    .blog-post-content {
+      /*white-space: pre-wrap;*/
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .blog-post-content p {
+      margin-top: 0;
+      margin-bottom: .5rem;
+    }
+
+    /* ========== BLOG FRAME STYLING ========== */
+    .blog-frame {
+      background-color: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 40px;
+    }
+
+    /* ========== BUTTON HOVERS ========== */
+    .btn {
+      transition: background-color .2s ease, color .2s ease, opacity .2s ease;
+    }
+    .btn:hover {
+      opacity: .9;
+    }
+    .btn-outline-success:hover {
+      background-color: #b0e0a8;
+      border-color: #b0e0a8;
+      color: #fff;
+    }
+    .btn-danger:hover {
+      background-color: #c0392b;
+      border-color: #c0392b;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light"
+       style="background: linear-gradient(90deg, #d0f0c0 0%, #b0e0a8 100%) !important;">
+    <div class="container-fluid">
+
+      <!-- Brand -->
+      <a class="navbar-brand text-success font-weight-bold"
+         href="{{ url_for('select_exam') }}">
+        Kendi Kendine Eğitim Platformu
+      </a>
+
+      <!-- Toggler -->
+      <button class="navbar-toggler" type="button"
+              data-toggle="collapse" data-target="#mainNavbar"
+              aria-controls="mainNavbar" aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="mainNavbar">
+
+        <!-- Left side -->
+        <ul class="navbar-nav mr-auto">
+          {% if session.get('user_id') %}
+            <li class="nav-item {% if request.endpoint=='select_exam' %}active{% endif %}">
+              <a class="nav-link" href="{{ url_for('select_exam') }}">Sınav</a>
+            </li>
+            <li class="nav-item {% if request.endpoint=='blog' %}active{% endif %}">
+              <a class="nav-link" href="{{ url_for('blog') }}">Blog Yazıları</a>
+            </li>
+            &nbsp;
+            &nbsp;
+            <li class="nav-item">
+              <span class="navbar-text text-success">{{ session['user_name'] }}</span>
+            </li>
+          {% else %}
+            <li class="nav-item {% if request.endpoint=='blog' %}active{% endif %}">
+              <a class="nav-link" href="{{ url_for('blog') }}">Blog Yazıları</a>
+            </li>
+          {% endif %}
+        </ul>
+
+        <!-- Right side -->
+        {% if session.get('user_id') %}
+          <ul class="navbar-nav ml-auto align-items-start">
+
+            <!-- All‑time high + Puan Tablosu -->
+            <li class="nav-item d-flex flex-column align-items-end pr-3">
+              <span class="navbar-text text-success">
+                Tüm Zamanların En Yüksek Skoru: <strong>{{ top_score }}</strong>
+              </span>
+              <a href="{{ url_for('scoreboard') }}" class="btn-scoreboard">
+                Sınav Skor Sıralaması
+              </a>
+            </li>
+
+            <!-- Personal high -->
+            <li class="nav-item">
+              <span class="navbar-text text-success mr-4">
+                Kişisel En Yüksek Skorunuz: <strong>{{ user_best }}</strong>
+              </span>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('about') }}">Hakkımda</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-outline-success my-1 mx-2"
+                 href="{{ url_for('update_temp') }}">
+                Sıcaklık
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            </li>
+            {% if session.get('rolId') == 1 %}
+              <li class="nav-item">
+                <a class="nav-link"
+                   href="{{ url_for('moderate_blog_posts') }}">Moderasyon</a>
+              </li>
+            {% endif %}
+
+          </ul>
+        {% else %}
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-outline-success my-1 mx-2"
+                 href="{{ url_for('update_temp') }}">
+                Sunucu Odası Sıcaklığı
+              </a>
+            </li>
+          </ul>
+        {% endif %}
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- FLASH MESSAGES -->
+  <div class="flash-messages container mt-3 text-center">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+          {% for category, msg in messages %}
+            <li class="{{ category }}">{{ msg|safe }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="container-fluid mt-3">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- UNSUBSCRIBE & ADMIN MEMBERS -->
+  {% if session.get('user_id') and request.endpoint == 'select_exam' %}
+    <div class="unsubscribe-btn">
+      {% if session.get('rolId') == 1 %}
+        <a href="{{ url_for('members') }}"
+           class="btn btn-info btn-sm mr-1">Üyeler</a>
+        <a href="{{ url_for('visit_count') }}"
+           class="btn btn-secondary btn-sm mr-1">Ziyaretçi Raporu</a>
+      {% endif %}
+      <a href="{{ url_for('delete_account') }}"
+         class="btn btn-danger btn-sm">Unsubscribe</a>
+    </div>
+  {% endif %}
+
+  <!-- FOOTER -->
+  <footer class="mt-4 text-center py-3"
+          style="background: linear-gradient(90deg, #d0f0c0,#b0e0a8) !important;">
+    &copy; 2025 – Developed by Murat BAYKAL
+  </footer>
+
+  <!-- Bootstrap JS + dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

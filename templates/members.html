@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Üyeler – Online Sınav{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Üyeler</h2>
+  {% if users %}
+    <table class="table table-striped table-bordered">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">İsim</th>
+          <th scope="col">E‑posta</th>
+          <th scope="col">Rol</th>
+          <th scope="col">Sil</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+          <tr>
+            <th scope="row">{{ u.id }}</th>
+            <td>{{ u.name }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.role or '—' }}</td>
+            <td>
+                <!-- delete form with JS confirm -->
+                <form method="POST"
+                        action="{{ url_for('delete_member', user_id=u.id) }}"
+                        style="display:inline;"
+                        onsubmit="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </td>  
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Henüz kayıtlı kullanıcı yok.</p>
+  {% endif %}
+</div>
+{% endblock %}

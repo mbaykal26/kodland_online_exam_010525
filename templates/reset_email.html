@@ -1,0 +1,14 @@
+<!-- templates/reset_email.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Şifre Sıfırlama</title>
+  </head>
+  <body>
+    <p>Merhaba {{ name }},</p>
+    <p>Şifrenizi sıfırlamak için lütfen aşağıdaki bağlantıya tıklayın:</p>
+    <p><a href="{{ reset_url }}">{{ reset_url }}</a></p>
+    <p>Bu bağlantı 1 saat sonra geçersiz olacaktır.</p>
+  </body>
+</html>
