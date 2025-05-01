@@ -1,0 +1,2 @@
+1 - Kullanıcıların kendi ayarlarını (en azından şifre değişikliği, fotoğraf yükleme) yapabilecekleri bir root ve html sayfası.
+2 - Farklı formatta dosyaların yüklenebilmesi için format çeşitliliğini sağlanacak.
